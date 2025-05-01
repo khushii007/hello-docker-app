@@ -11,15 +11,27 @@ pipeline {
         )
       }
     }
-    stage('Build Docker Image') {
+    stage('Build & Push') {
       steps {
-        sh 'docker build -t hello-docker-app:${BUILD_NUMBER} .'
+        script {
+          // Build
+          docker.build("khushii007/hello-docker-app:${BUILD_NUMBER}")
+          // Login
+          withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-cred',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+          )]) {
+            sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+          }
+          // Push
+          sh "docker push khushii007/hello-docker-app:${BUILD_NUMBER}"
+        }
       }
     }
     stage('Run Container') {
       steps {
-        // Demonstrate it works
-        sh 'docker run --rm hello-docker-app:${BUILD_NUMBER}'
+        sh 'docker run --rm khushii007/hello-docker-app:${BUILD_NUMBER}'
       }
     }
   }
