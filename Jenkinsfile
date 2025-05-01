@@ -6,6 +6,7 @@ pipeline {
       steps {
         git(
           url: 'https://github.com/khushii007/hello-docker-app.git',
+          branch: 'main',                     // ← force main
           credentialsId: 'github-usrpwd'
         )
       }
