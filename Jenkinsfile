@@ -26,6 +26,8 @@ pipeline {
           }
           // Push
           sh "docker push khushii007/hello-docker-app:${BUILD_NUMBER}"
+         sh "docker tag khushii007/hello-docker-app:${BUILD_NUMBER} khushii007/hello-docker-app:latest"
+         sh "docker push khushii007/hello-docker-app:latest"
         }
       }
     }
