@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       steps {
         git(
-          url: 'https://github.com/khushiii007/hello-docker-app.git',
+          url: 'https://github.com/khushii007/hello-docker-app.git',
           credentialsId: 'github-usrpwd'
         )
       }
