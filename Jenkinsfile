@@ -34,17 +34,17 @@ pipeline {
     stage('Run Container') {
       steps {
         script {
-          // 1. Start container in background
+          // 1. Start container in background, mapping container 8080→host 8085
           def cid = sh(
             returnStdout: true,
-            script: "docker run -d khushii007/hello-docker-app:${BUILD_NUMBER}"
+            script: "docker run -d -p 8085:8080 khushii007/hello-docker-app:${BUILD_NUMBER}"
           ).trim()
       
           // 2. Give it a moment to spin up
           sh 'sleep 5'
       
           // 3. Test the HTTP endpoint
-          sh 'curl --fail http://localhost:8080 || (echo "Health check failed" && exit 1)'
+          sh 'curl --fail http://localhost:8085 || (echo "Health check failed" && exit 1)'
       
           // 4. Cleanup
           sh "docker rm -f ${cid}"
