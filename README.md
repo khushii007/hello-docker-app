@@ -36,3 +36,18 @@ Use it to verify your Jenkins+Docker setup end-to-end.
    ```bash
    git clone https://github.com/<YOUR_GH_USERNAME>/hello-docker-app.git
    cd hello-docker-app
+
+---
+
+## 🔍 Overview
+
+This repository contains:
+
+- `.github/workflows/ci.yml` – GitHub Actions CI: lint, build & smoke-test  
+- `Jenkinsfile` – Jenkins pipeline to build, tag, push & deploy your Docker image  
+- `app.py` – a tiny Python HTTP server serving “👋 Hello from inside a Docker container!”  
+- `Dockerfile` – builds a container running `app.py` on port 8080  
+- `k8s/deployment.yaml` & `k8s/service.yaml` – Kubernetes Deployment (2 replicas) + NodePort Service  
+- Helm values & commands to install **Prometheus** & **Grafana** for cluster/app monitoring  
+
+Use it as a reference end-to-end CI/CD and observability demo. 
