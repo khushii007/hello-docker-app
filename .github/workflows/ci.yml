@@ -1,0 +1,38 @@
+name: CI
+
+# Run on pushes or PRs to main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the code
+      - uses: actions/checkout@v4
+
+      # 2. Lint Python app.py
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install flake8
+        run: pip install flake8
+      - name: Lint code
+        run: flake8 app.py
+
+      # 3. Build Docker image
+      - name: Build Docker image
+        run: docker build -t hello-docker-app:ci .
+
+      # 4. Smoke-test the container
+      - name: Smoke test container
+        run: |
+          docker run -d -p 8080:8080 --name testci hello-docker-app:ci
+          sleep 5
+          curl --fail http://localhost:8080
+          docker rm -f testci
