@@ -23,7 +23,7 @@ jobs:
       - name: Install flake8 and test dependencies
         run: pip install flake8 pytest pytest-cov
       - name: Lint code
-        run: flake8 app.py
+        run: flake8 app/app.py
       - name: Run tests with coverage
         run: |
           pytest --cov=. --cov-report=term-missing
