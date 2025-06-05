@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Copy our script in
-COPY app.py /app.py
+COPY app/main.py /app.py
 
 # Expose port for K8s
 EXPOSE 8080
