@@ -18,3 +18,5 @@ if __name__ == "__main__":
     httpd = HTTPServer((HOST, PORT), HelloHandler)
     print(f"Serving on http://{HOST}:{PORT}")
     httpd.serve_forever()
+    print( "Hello, world!" )  # spacing inside parentheses is not flake8-friendly
+
