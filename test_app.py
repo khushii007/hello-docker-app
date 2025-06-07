@@ -2,6 +2,7 @@ import subprocess
 import time
 import requests
 
+
 def test_hello_server():
     # Start the server
     server = subprocess.Popen(["python3", "app/main.py"])
