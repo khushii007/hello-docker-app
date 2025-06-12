@@ -1,0 +1,33 @@
+controller:
+  # Don’t recreate the ServiceAccount (you already did)
+  serviceAccount:
+    create: false
+    name: jenkins
+
+  # Point Jenkins at your existing Secret…
+  admin:
+    existingSecret: jenkins-admin-secret
+    existingSecretKey: jenkins-admin-password
+    existingSecretUsernameKey: jenkins-admin-user
+
+  installPlugins:
+    - kubernetes:1.29.6
+    - workflow-aggregator:2.6
+    - git:4.11.3
+    - docker-workflow:1.26
+    - pipeline-stage-view:2.19
+
+  serviceType: NodePort
+  servicePort: 8080
+  nodePort: 30000
+
+  persistence:
+    existingClaim: jenkins-pvc
+
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"

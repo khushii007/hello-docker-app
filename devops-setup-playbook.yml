@@ -1,5 +1,5 @@
 ---
-- name: Setup DevOps VM
+- name: Setup DevOps VM with Docker, Jenkins, Minikube, Helm, and kubectl
   hosts: devops
   become: yes
   vars:
@@ -12,7 +12,7 @@
         update_cache: yes
         cache_valid_time: 3600
 
-    - name: Install dependencies
+    - name: Install essential dependencies
       apt:
         name:
           - apt-transport-https
@@ -23,19 +23,22 @@
           - conntrack
         state: present
 
+    # ---------------- Docker Setup ----------------
     - name: Add Docker GPG key
-      apt_key:
+      get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+        dest: /usr/share/keyrings/docker-archive-keyring.gpg
+        mode: '0644'
 
     - name: Add Docker apt repository
       apt_repository:
         repo: >-
-          deb [arch=amd64] https://download.docker.com/linux/ubuntu
-          {{ ansible_lsb.codename }} stable
+          deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg]
+          https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
         state: present
+        filename: docker
 
-    - name: Install Docker CE
+    - name: Install Docker
       apt:
         name:
           - docker-ce
@@ -51,21 +54,21 @@
         append: yes
       loop: "{{ docker_users }}"
 
+    # ---------------- Java and Jenkins Setup ----------------
     - name: Install OpenJDK 17
       apt:
         name: openjdk-17-jdk
         state: present
 
-    - name: Add Jenkins apt key
-      apt_key:
-        url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
-        state: present
+    - name: Download Jenkins GPG key and save to keyring
+      get_url:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        dest: /usr/share/keyrings/jenkins-keyring.gpg
+        mode: '0644'
 
-    - name: Add Jenkins apt repository
+    - name: Add Jenkins repository
       apt_repository:
-        repo: >-
-          deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]
-          https://pkg.jenkins.io/debian-stable binary/
+        repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/"
         filename: jenkins
         state: present
 
@@ -75,34 +78,32 @@
         state: present
         update_cache: yes
 
-    - name: Ensure Jenkins is started and enabled
+    - name: Ensure Jenkins is running
       service:
         name: jenkins
         state: started
         enabled: yes
 
-    - name: Add Kubernetes apt key
-      apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        state: present
+    # ---------------- kubectl setup (Binary) ----------------
+    - name: Download kubectl binary
+      get_url:
+        url: https://dl.k8s.io/release/v1.30.1/bin/linux/amd64/kubectl
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
 
-    - name: Add Kubernetes apt repository
-      apt_repository:
-        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
-        state: present
+    - name: Verify kubectl installation
+      command: kubectl version --client
+      register: kubectl_version
+      changed_when: false
 
-    - name: Install kubectl
-      apt:
-        name: kubectl
-        state: present
-        update_cache: yes
-
-    - name: Install Minikube
+    # ---------------- Minikube Setup ----------------
+    - name: Download Minikube
       get_url:
         url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         dest: /usr/local/bin/minikube
         mode: '0755'
 
+    # ---------------- Helm Setup ----------------
     - name: Download Helm archive
       get_url:
         url: https://get.helm.sh/helm-v3.12.3-linux-amd64.tar.gz
@@ -115,7 +116,7 @@
         dest: /tmp
         remote_src: yes
 
-    - name: Move helm binary
+    - name: Move Helm binary
       copy:
         src: /tmp/linux-amd64/helm
         dest: /usr/local/bin/helm

@@ -1,0 +1,37 @@
+
+PLAY [Setup DevOps VM with Docker, Jenkins, Minikube, Helm, and kubectl] *******
+
+TASK [Gathering Facts] *********************************************************
+ok: [34.57.126.9]
+
+TASK [Update apt cache] ********************************************************
+ok: [34.57.126.9]
+
+TASK [Install essential dependencies] ******************************************
+ok: [34.57.126.9]
+
+TASK [Add Docker GPG key] ******************************************************
+ok: [34.57.126.9]
+
+TASK [Add Docker apt repository] ***********************************************
+ok: [34.57.126.9]
+
+TASK [Install Docker] **********************************************************
+ok: [34.57.126.9]
+
+TASK [Add user to docker group] ************************************************
+ok: [34.57.126.9] => (item=khushi.israni13)
+
+TASK [Install OpenJDK 17] ******************************************************
+ok: [34.57.126.9]
+
+TASK [Download Jenkins GPG key] ************************************************
+changed: [34.57.126.9]
+
+TASK [Add Jenkins apt repository] **********************************************
+An exception occurred during task execution. To see the full traceback, use -vvv. The error was: apt_pkg.Error: E:Problem renaming the file /var/cache/apt/pkgcache.bin.7u0Pag to /var/cache/apt/pkgcache.bin - rename (2: No such file or directory), W:You may want to run apt-get update to correct these problems, E:The package cache file is corrupted
+fatal: [34.57.126.9]: FAILED! => {"changed": false, "module_stderr": "Shared connection to 34.57.126.9 closed.\r\n", "module_stdout": "Traceback (most recent call last):\r\n  File \"<stdin>\", line 15, in <module>\r\n  File \"/usr/lib/python3.10/runpy.py\", line 224, in run_module\r\n    return _run_module_code(code, init_globals, run_name, mod_spec)\r\n  File \"/usr/lib/python3.10/runpy.py\", line 96, in _run_module_code\r\n    _run_code(code, mod_globals, init_globals,\r\n  File \"/usr/lib/python3.10/runpy.py\", line 86, in _run_code\r\n    exec(code, run_globals)\r\n  File \"/tmp/ansible_apt_repository_payload_12hez4im/ansible_apt_repository_payload.zip/ansible/modules/apt_repository.py\", line 782, in <module>\r\n  File \"/tmp/ansible_apt_repository_payload_12hez4im/ansible_apt_repository_payload.zip/ansible/modules/apt_repository.py\", line 748, in main\r\n  File \"/usr/lib/python3/dist-packages/apt/cache.py\", line 152, in __init__\r\n    self.open(progress)\r\n  File \"/usr/lib/python3/dist-packages/apt/cache.py\", line 214, in open\r\n    self._cache = apt_pkg.Cache(progress)\r\napt_pkg.Error: E:Problem renaming the file /var/cache/apt/pkgcache.bin.7u0Pag to /var/cache/apt/pkgcache.bin - rename (2: No such file or directory), W:You may want to run apt-get update to correct these problems, E:The package cache file is corrupted\r\n", "msg": "MODULE FAILURE: No start of json char found\nSee stdout/stderr for the exact error", "rc": 1}
+
+PLAY RECAP *********************************************************************
+34.57.126.9                : ok=9    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

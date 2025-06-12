@@ -1,0 +1,12 @@
+
+PLAY [Setup DevOps VM with Docker, Jenkins, Minikube, Helm, and kubectl] *******
+
+TASK [Gathering Facts] *********************************************************
+ok: [34.57.126.9]
+
+TASK [Update apt cache] ********************************************************
+fatal: [34.57.126.9]: FAILED! => {"changed": false, "msg": "E:Conflicting values set for option Signed-By regarding source https://pkg.jenkins.io/debian-stable/ binary/: /usr/share/keyrings/jenkins-keyring.gpg != /usr/share/keyrings/jenkins-keyring.asc, E:The list of sources could not be read."}
+
+PLAY RECAP *********************************************************************
+34.57.126.9                : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
